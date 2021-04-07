@@ -18,7 +18,7 @@ public class HoverFn : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     {
         if (mouse_over)
         {
-            Debug.Log("Mouse Over");
+            //Debug.Log("Mouse Over");
         }
     }
 

@@ -127,5 +127,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Name: Enemy1
   dmg: 5
-  maxHP: 24
+  maxHP: 30
   currentHP: 24

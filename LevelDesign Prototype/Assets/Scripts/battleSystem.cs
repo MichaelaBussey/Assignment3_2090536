@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public enum BattleState
 {
@@ -11,12 +12,23 @@ public enum BattleState
 public class battleSystem : MonoBehaviour
 {
     public BattleState State;
-    public Text CombatLog;
-    public GameObject playerPrefab, enemyPrefab, WON, LOST, critHit, winBox, loseBox, End;
-    Stats PlayerUnit, EnemyUnit;
+    public Text CombatLog, atk1Dmg, atk2Dmg, healAmtText;
+    public GameObject playerPrefab, enemyPrefab, critHit, winBox, loseBox, wonEnd, loseEnd;
+    public GameObject increaseStats;
+    public bool HPUp, Atk1Up, Atk2Up, HealUp = false;
+    public Stats PlayerUnit, EnemyUnit;
     public Transform playerLocation, enemyLocation;
     public BattleHUD playerHUD, enemyHUD;
     public AudioClip Crit, Heal, Hit, Miss;
+    int atk1, atk2, healAmt;
+
+    int atk1Min = 3;
+    int atk1Max = 6;
+    int atk2Min = 5;
+    int atk2Max = 10;
+    int healMin = 4;
+    int healMax = 8;
+
 
 
     void Start()
@@ -24,20 +36,16 @@ public class battleSystem : MonoBehaviour
         State = BattleState.START;
         playerPrefab.SetActive(true);
         enemyPrefab.SetActive(true);
+        playerHUD.HP.text = PlayerUnit.maxHP.ToString();
         StartCoroutine(SetupBattle());
     }
     IEnumerator SetupBattle()
     {
-        GameObject playerGO = Instantiate(playerPrefab, playerLocation);
-        PlayerUnit = playerGO.GetComponent<Stats>();
-        GameObject enemyGO = Instantiate(enemyPrefab, enemyLocation);
-        EnemyUnit = enemyGO.GetComponent<Stats>();
-        //Retrieves stats about the two
+        PlayerUnit = playerPrefab.GetComponent<Stats>();
+        EnemyUnit = enemyPrefab.GetComponent<Stats>();
         playerHUD.SetHUD(PlayerUnit);
         enemyHUD.SetHUD(EnemyUnit);
-
         yield return new WaitForSeconds(0);
-
         State = BattleState.PLAYERTURN;
         PlayerTurn();
     }
@@ -46,14 +54,14 @@ public class battleSystem : MonoBehaviour
     {
         if (State == BattleState.PLAYERTURN)
         {
-            int atk1 = Random.Range(3, 6);
+            atk1 = Random.Range(atk1Min, atk1Max);
             bool isDead = EnemyUnit.TakeDamage(atk1);
             //ACHIEVED MULTIPLE SOUNDS ON ONE SCRIPT!!
             GetComponent<AudioSource>().clip = Hit;
             GetComponent<AudioSource>().Play();
             enemyHUD.HP.text = EnemyUnit.currentHP.ToString();
             State = BattleState.ENEMYTURN;
-            CombatLog.text +=  atk1.ToString() + "dmg dealt to enemy." + "\n";
+            CombatLog.text += atk1.ToString() + "dmg dealt to enemy." + "\n";
             CombatLog.color = Color.blue;
             yield return new WaitForSeconds(2);
 
@@ -75,18 +83,18 @@ public class battleSystem : MonoBehaviour
     {
         if (State == BattleState.PLAYERTURN)
         {
-            int hitChance = 75;
+            int hitChance = 70;
             bool isDead = false;
-            int atk2;
+
             if (Random.Range(0, 100) <= hitChance)
             {
-            atk2 = Random.Range(5, 10);
-            isDead = EnemyUnit.TakeDamage(atk2);
-            GetComponent<AudioSource>().clip = Hit;
-            GetComponent<AudioSource>().Play();
-            enemyHUD.HP.text = EnemyUnit.currentHP.ToString();
-            CombatLog.text += atk2.ToString() + "dmg dealt to enemy." + "\n";
-            CombatLog.color = Color.blue;            
+                atk2 = Random.Range(atk2Min, atk2Max);
+                isDead = EnemyUnit.TakeDamage(atk2);
+                GetComponent<AudioSource>().clip = Hit;
+                GetComponent<AudioSource>().Play();
+                enemyHUD.HP.text = EnemyUnit.currentHP.ToString();
+                CombatLog.text += atk2.ToString() + "dmg dealt to enemy." + "\n";
+                CombatLog.color = Color.blue;
                 if (atk2 >= 7)
                 {
                     GetComponent<AudioSource>().clip = Crit;
@@ -123,18 +131,18 @@ public class battleSystem : MonoBehaviour
 
     IEnumerator PlayerHeal()
     {
-        if( State == BattleState.PLAYERTURN)
+        if (State == BattleState.PLAYERTURN)
         {
-        int healAmt = Random.Range(3, 7) ;
-        PlayerUnit.Heal(healAmt);
-        GetComponent<AudioSource>().clip = Heal;
-        GetComponent<AudioSource>().Play();
-        CombatLog.text += "+" + healAmt.ToString() + " HP healed!" + "\n";
-        CombatLog.color = Color.green;
-        playerHUD.HP.text = PlayerUnit.currentHP.ToString();
-        State = BattleState.ENEMYTURN;
-        yield return new WaitForSeconds(2);
-        StartCoroutine(EnemyTurn());
+            healAmt = Random.Range(healMin, healMax);
+            PlayerUnit.Heal(healAmt);
+            GetComponent<AudioSource>().clip = Heal;
+            GetComponent<AudioSource>().Play();
+            CombatLog.text += "+" + healAmt.ToString() + " HP healed!" + "\n";
+            CombatLog.color = Color.green;
+            playerHUD.HP.text = PlayerUnit.currentHP.ToString();
+            State = BattleState.ENEMYTURN;
+            yield return new WaitForSeconds(2);
+            StartCoroutine(EnemyTurn());
         }
 
     }
@@ -143,55 +151,62 @@ public class battleSystem : MonoBehaviour
     void EndBattle()
     {
         if (State == BattleState.WON)
-        {            
+        {
             winBox.SetActive(true);
-            WON.SetActive(true);
-            End.SetActive(true);
+            //WON.SetActive(true);
+            wonEnd.SetActive(true);
         }
 
         else if (State == BattleState.LOST)
         {
-            loseBox.SetActive(true);            
-            LOST.SetActive(true);
-            End.SetActive(true);
+            loseBox.SetActive(true);
+            //LOST.SetActive(true);
+            loseEnd.SetActive(true);
         }
 
     }
 
     IEnumerator EnemyTurn()
     {
-        int hitChance = 85;
-        bool isDead = false;
-        if (Random.Range(0, 100) <= hitChance)
+        //int hitChance = 85;
+        //isDead = false;
+        yield return new WaitForSeconds(1);
+        if (SceneManager.GetActiveScene().buildIndex == 0)
         {
-            int EnemyAtk = Random.Range(3, 8);
-            isDead = PlayerUnit.TakeDamage(EnemyAtk);
-            GetComponent<AudioSource>().clip = Hit;
-            GetComponent<AudioSource>().Play();
-            CombatLog.text += EnemyAtk.ToString() + "dmg dealt to you." + "\n";
-            CombatLog.color = Color.red;
-            playerHUD.HP.text = PlayerUnit.currentHP.ToString();
-            yield return new WaitForSeconds(1);
-        }
-        else
-        {
-            GetComponent<AudioSource>().clip = Miss;
-            GetComponent<AudioSource>().Play();
-            CombatLog.text += ("Enemy attack missed!" + "\n");
-            CombatLog.color = Color.red;
+            Enemy1Atk1();
         }
 
-        if (isDead)
+        else if (SceneManager.GetActiveScene().buildIndex == 1)
         {
-            State = BattleState.LOST;
-            EndBattle();
+            float Move = Random.Range(0f, 1f);
+            print(Move);
+
+            if (Move < 0.65)
+            {
+                Enemy2Atk1();
+                print("atk1");
+            }
+            else if (Move > 0.66)
+            {
+                Enemy2Atk2();
+                print("atk2");
+            }
         }
-        else
+        else if (SceneManager.GetActiveScene().buildIndex == 2)
         {
-            State = BattleState.PLAYERTURN;
-            PlayerTurn();
+            float Move = Random.Range(0, 1);
+            if (Move < 0.60)
+            {
+                Enemy3Atk1();
+            }
+            else
+            {
+                Enemy3Atk2();
+            }
         }
     }
+
+
 
     void PlayerTurn()
     {
@@ -232,5 +247,212 @@ public class battleSystem : MonoBehaviour
         {
             StartCoroutine(PlayerHeal());
         }
+
+
+    }
+
+    public void Enemy1Atk1()
+    {
+        int hitChance = 85;
+        bool isDead = false;
+
+        if (Random.Range(0, 100) <= hitChance)
+        {
+            int EnemyAtk = Random.Range(4, 8);
+            isDead = PlayerUnit.TakeDamage(EnemyAtk);
+            GetComponent<AudioSource>().clip = Hit;
+            GetComponent<AudioSource>().Play();
+            CombatLog.text += EnemyAtk.ToString() + "dmg dealt to you." + "\n";
+            CombatLog.color = Color.red;
+            playerHUD.HP.text = PlayerUnit.currentHP.ToString();
+        }
+        else
+        {
+            GetComponent<AudioSource>().clip = Miss;
+            GetComponent<AudioSource>().Play();
+            CombatLog.text += ("Enemy attack missed!" + "\n");
+            CombatLog.color = Color.red;
+        }
+
+        if (isDead)
+        {
+            State = BattleState.LOST;
+            EndBattle();
+        }
+        else
+        {
+            State = BattleState.PLAYERTURN;
+            PlayerTurn();
+        }
+    }
+    public void Enemy2Atk1()
+    {
+        int hitChance = 85;
+        bool isDead = false;
+
+        if (Random.Range(0, 100) <= hitChance)
+        {
+            int EnemyAtk = Random.Range(5, 9);
+            isDead = PlayerUnit.TakeDamage(EnemyAtk);
+            GetComponent<AudioSource>().clip = Hit;
+            GetComponent<AudioSource>().Play();
+            CombatLog.text += EnemyAtk.ToString() + "dmg dealt to you." + "\n";
+            CombatLog.color = Color.red;
+            playerHUD.HP.text = PlayerUnit.currentHP.ToString();
+        }
+        else
+        {
+            GetComponent<AudioSource>().clip = Miss;
+            GetComponent<AudioSource>().Play();
+            CombatLog.text += ("Enemy attack missed!" + "\n");
+            CombatLog.color = Color.red;
+        }
+
+        if (isDead)
+        {
+            State = BattleState.LOST;
+            EndBattle();
+        }
+        else
+        {
+            State = BattleState.PLAYERTURN;
+            PlayerTurn();
+        }
+    }
+    public void Enemy2Atk2()
+    {
+        int hitChance = 75;
+        bool isDead = false;
+
+        if (Random.Range(0, 100) <= hitChance)
+        {
+            int EnemyAtk = Random.Range(6, 10);
+            isDead = PlayerUnit.TakeDamage(EnemyAtk);
+            GetComponent<AudioSource>().clip = Hit;
+            GetComponent<AudioSource>().Play();
+            CombatLog.text += EnemyAtk.ToString() + "dmg dealt to you." + "\n" + "It was a Hard Attack!";
+            CombatLog.color = Color.red;
+            playerHUD.HP.text = PlayerUnit.currentHP.ToString();
+        }
+        else
+        {
+            GetComponent<AudioSource>().clip = Miss;
+            GetComponent<AudioSource>().Play();
+            CombatLog.text += ("Enemy's Hard attack missed!" + "\n");
+            CombatLog.color = Color.red;
+        }
+
+        if (isDead)
+        {
+            State = BattleState.LOST;
+            EndBattle();
+        }
+        else
+        {
+            State = BattleState.PLAYERTURN;
+            PlayerTurn();
+        }
+    }
+    public void Enemy3Atk1()
+    {
+        int hitChance = 90;
+        bool isDead = false;
+
+        if (Random.Range(0, 100) <= hitChance)
+        {
+            int EnemyAtk = Random.Range(4, 9);
+            isDead = PlayerUnit.TakeDamage(EnemyAtk);
+            GetComponent<AudioSource>().clip = Hit;
+            GetComponent<AudioSource>().Play();
+            CombatLog.text += EnemyAtk.ToString() + "dmg dealt to you." + "\n";
+            CombatLog.color = Color.red;
+            playerHUD.HP.text = PlayerUnit.currentHP.ToString();
+        }
+        else
+        {
+            GetComponent<AudioSource>().clip = Miss;
+            GetComponent<AudioSource>().Play();
+            CombatLog.text += ("Enemy attack missed!" + "\n");
+            CombatLog.color = Color.red;
+        }
+
+        if (isDead)
+        {
+            State = BattleState.LOST;
+            EndBattle();
+        }
+        else
+        {
+            State = BattleState.PLAYERTURN;
+            PlayerTurn();
+        }
+    }
+    public void Enemy3Atk2()
+    {
+        int hitChance = 75;
+        bool isDead = false;
+
+        if (Random.Range(0, 100) <= hitChance)
+        {
+            int EnemyAtk = Random.Range(6, 11);
+            isDead = PlayerUnit.TakeDamage(EnemyAtk);
+            GetComponent<AudioSource>().clip = Hit;
+            GetComponent<AudioSource>().Play();
+            CombatLog.text += EnemyAtk.ToString() + "dmg dealt to you." + "\n" + "It was a Hard Attack!";
+            CombatLog.color = Color.red;
+            playerHUD.HP.text = PlayerUnit.currentHP.ToString();
+        }
+        else
+        {
+            GetComponent<AudioSource>().clip = Miss;
+            GetComponent<AudioSource>().Play();
+            CombatLog.text += ("Enemy attack missed!" + "\n");
+            CombatLog.color = Color.red;
+        }
+
+        if (isDead)
+        {
+            State = BattleState.LOST;
+            EndBattle();
+        }
+        else
+        {
+            State = BattleState.PLAYERTURN;
+            PlayerTurn();
+        }
+    }
+    //Button fns
+    public void HPUpBtn1()
+    {
+        HPUp = true;
+        PlayerUnit.maxHP += 4;
+        PlayerUnit.currentHP += 4;
+        playerHUD.HP.text = PlayerUnit.maxHP.ToString();
+        increaseStats.SetActive(false);
+    }
+    public void Atk1UpBtn1()
+    {
+        Atk1Up = true;
+        atk1Min = 5;
+        atk1Max = 7;
+        atk1Dmg.text = atk1Min.ToString() + "-" + atk1Max.ToString() + " dmg";
+        increaseStats.SetActive(false);
+    }
+    public void Atk2UpBtn1()
+    {
+        Atk2Up = true;
+        atk2Min = 6;
+        atk2Max = 11;
+        atk2Dmg.text = atk2Min.ToString() + "-" + atk2Max.ToString() + " dmg";
+        increaseStats.SetActive(false);
+    }
+    public void HealUpBtn1()
+    {
+        HealUp = true;
+        healMin = 5;
+        healMax = 9;
+        healAmtText.text = healMin.ToString() + "-" + healMax.ToString() + " HP";
+        increaseStats.SetActive(false);
     }
 }
+

@@ -46,8 +46,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Name: Player
   dmg: 5
-  maxHP: 24
-  currentHP: 24
+  maxHP: 26
+  currentHP: 26
 --- !u!1 &999923790211422248
 GameObject:
   m_ObjectHideFlags: 0
