@@ -669,8 +669,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1643916708}
   m_HandleRect: {fileID: 1643916707}
   m_Direction: 2
-  m_Value: 1.0000006
-  m_Size: 0.32052547
+  m_Value: 1.0000001
+  m_Size: 0.32052708
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -2912,6 +2912,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   State: 0
   CombatLog: {fileID: 1887206894}
+  atk1Dmg: {fileID: 0}
+  atk2Dmg: {fileID: 0}
+  healAmtText: {fileID: 0}
   playerPrefab: {fileID: 683415236731244577}
   enemyPrefab: {fileID: 1852072590}
   critHit: {fileID: 2274734487292361357, guid: 8c8022aa5634a6c42823793f8841f328, type: 3}
@@ -2924,6 +2927,8 @@ MonoBehaviour:
   Atk1Up: 0
   Atk2Up: 0
   HealUp: 0
+  PlayerUnit: {fileID: 6467545855252395027}
+  EnemyUnit: {fileID: 1852072591}
   playerLocation: {fileID: 392090550}
   enemyLocation: {fileID: 1597952265}
   playerHUD: {fileID: 1865754633}
@@ -3835,6 +3840,18 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 1258258754}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1852072591 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4148758136750330286, guid: 40aee84ee814a3c41a5b9c64f1525dc7,
+    type: 3}
+  m_PrefabInstance: {fileID: 1258258754}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1852072590}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8d8893d4ab5f90a4ea2f40961c4e5984, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1852099827
 GameObject:
   m_ObjectHideFlags: 0
@@ -4131,7 +4148,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0.00048828125, y: -265.82416}
+  m_AnchoredPosition: {x: 0.00048828125, y: -265.82394}
   m_SizeDelta: {x: 579.5304, y: 782.4414}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1887206893

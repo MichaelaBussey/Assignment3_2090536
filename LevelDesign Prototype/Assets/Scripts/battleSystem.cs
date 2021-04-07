@@ -194,7 +194,7 @@ public class battleSystem : MonoBehaviour
         }
         else if (SceneManager.GetActiveScene().buildIndex == 2)
         {
-            float Move = Random.Range(0, 1);
+            float Move = Random.Range(0f, 1f);
             if (Move < 0.60)
             {
                 Enemy3Atk1();
@@ -258,7 +258,7 @@ public class battleSystem : MonoBehaviour
 
         if (Random.Range(0, 100) <= hitChance)
         {
-            int EnemyAtk = Random.Range(4, 8);
+            int EnemyAtk = Random.Range(4, 7);
             isDead = PlayerUnit.TakeDamage(EnemyAtk);
             GetComponent<AudioSource>().clip = Hit;
             GetComponent<AudioSource>().Play();
@@ -330,7 +330,7 @@ public class battleSystem : MonoBehaviour
             isDead = PlayerUnit.TakeDamage(EnemyAtk);
             GetComponent<AudioSource>().clip = Hit;
             GetComponent<AudioSource>().Play();
-            CombatLog.text += EnemyAtk.ToString() + "dmg dealt to you." + "\n" + "It was a Hard Attack!";
+            CombatLog.text += EnemyAtk.ToString() + "dmg dealt to you." + "\n" + "It was a Hard Attack!" + "\n";
             CombatLog.color = Color.red;
             playerHUD.HP.text = PlayerUnit.currentHP.ToString();
         }
@@ -360,7 +360,7 @@ public class battleSystem : MonoBehaviour
 
         if (Random.Range(0, 100) <= hitChance)
         {
-            int EnemyAtk = Random.Range(4, 9);
+            int EnemyAtk = Random.Range(4, 10);
             isDead = PlayerUnit.TakeDamage(EnemyAtk);
             GetComponent<AudioSource>().clip = Hit;
             GetComponent<AudioSource>().Play();
@@ -389,16 +389,16 @@ public class battleSystem : MonoBehaviour
     }
     public void Enemy3Atk2()
     {
-        int hitChance = 75;
+        int hitChance = 85;
         bool isDead = false;
 
         if (Random.Range(0, 100) <= hitChance)
         {
-            int EnemyAtk = Random.Range(6, 11);
+            int EnemyAtk = Random.Range(7, 11);
             isDead = PlayerUnit.TakeDamage(EnemyAtk);
             GetComponent<AudioSource>().clip = Hit;
             GetComponent<AudioSource>().Play();
-            CombatLog.text += EnemyAtk.ToString() + "dmg dealt to you." + "\n" + "It was a Hard Attack!";
+            CombatLog.text += EnemyAtk.ToString() + "dmg dealt to you." + "\n" + "It was a Hard Attack!" + "\n";
             CombatLog.color = Color.red;
             playerHUD.HP.text = PlayerUnit.currentHP.ToString();
         }
@@ -421,6 +421,7 @@ public class battleSystem : MonoBehaviour
             PlayerTurn();
         }
     }
+
     //Button fns
     public void HPUpBtn1()
     {
@@ -434,8 +435,8 @@ public class battleSystem : MonoBehaviour
     {
         Atk1Up = true;
         atk1Min = 5;
-        atk1Max = 7;
-        atk1Dmg.text = atk1Min.ToString() + "-" + atk1Max.ToString() + " dmg";
+        atk1Max = 8;
+        atk1Dmg.text = atk1Min.ToString() + "-" + " 7 dmg";
         increaseStats.SetActive(false);
     }
     public void Atk2UpBtn1()
@@ -443,7 +444,7 @@ public class battleSystem : MonoBehaviour
         Atk2Up = true;
         atk2Min = 6;
         atk2Max = 11;
-        atk2Dmg.text = atk2Min.ToString() + "-" + atk2Max.ToString() + " dmg";
+        atk2Dmg.text = atk2Min.ToString() + " -" + " 10 dmg";
         increaseStats.SetActive(false);
     }
     public void HealUpBtn1()
@@ -451,8 +452,41 @@ public class battleSystem : MonoBehaviour
         HealUp = true;
         healMin = 5;
         healMax = 9;
-        healAmtText.text = healMin.ToString() + "-" + healMax.ToString() + " HP";
+        healAmtText.text = healMin.ToString() + " -" + " 8 HP";
+        increaseStats.SetActive(false);
+    }
+
+    public void HPUpBtn2()
+    {
+        HPUp = true;
+        PlayerUnit.maxHP += 4;
+        PlayerUnit.currentHP += 4;
+        playerHUD.HP.text = PlayerUnit.maxHP.ToString();
+        increaseStats.SetActive(false);
+    }
+    public void Atk1UpBtn2()
+    {
+        Atk1Up = true;
+        atk1Min = 6;
+        atk1Max = 9;
+        atk1Dmg.text = atk1Min.ToString() + " -" + " 8 dmg";
+        increaseStats.SetActive(false);
+    }
+    public void Atk2UpBtn2()
+    {
+        Atk2Up = true;
+        atk2Min = 6;
+        atk2Max = 12;
+        atk2Dmg.text = atk2Min.ToString() + " -" + " 11 dmg";
+        increaseStats.SetActive(false);
+    }
+    public void HealUpBtn2()
+    {
+        HealUp = true;
+        healMin = 6;
+        healMax = 10;
+        healAmtText.text = healMin.ToString() + " -" + " 9 HP";
         increaseStats.SetActive(false);
     }
 }
-
+ 
