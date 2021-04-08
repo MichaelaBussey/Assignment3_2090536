@@ -181,7 +181,7 @@ public class battleSystem : MonoBehaviour
             float Move = Random.Range(0f, 1f);
             print(Move);
 
-            if (Move < 0.67)
+            if (Move < 0.70)
             {
                 Enemy2Atk1();
                 print("atk1");
@@ -195,7 +195,7 @@ public class battleSystem : MonoBehaviour
         else if (SceneManager.GetActiveScene().buildIndex == 2)
         {
             float Move = Random.Range(0f, 1f);
-            if (Move < 0.63)
+            if (Move < 0.65)
             {
                 Enemy3Atk1();
             }
@@ -292,7 +292,7 @@ public class battleSystem : MonoBehaviour
 
         if (Random.Range(0, 100) <= hitChance)
         {
-            int EnemyAtk = Random.Range(5, 9);
+            int EnemyAtk = Random.Range(4, 8);
             isDead = PlayerUnit.TakeDamage(EnemyAtk);
             GetComponent<AudioSource>().clip = Hit;
             GetComponent<AudioSource>().Play();
@@ -321,12 +321,12 @@ public class battleSystem : MonoBehaviour
     }
     public void Enemy2Atk2()
     {
-        int hitChance = 75;
+        int hitChance = 70;
         bool isDead = false;
 
         if (Random.Range(0, 100) <= hitChance)
         {
-            int EnemyAtk = Random.Range(6, 10);
+            int EnemyAtk = Random.Range(6, 9);
             isDead = PlayerUnit.TakeDamage(EnemyAtk);
             GetComponent<AudioSource>().clip = Hit;
             GetComponent<AudioSource>().Play();
