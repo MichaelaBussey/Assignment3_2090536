@@ -389,7 +389,7 @@ public class battleSystem : MonoBehaviour
     }
     public void Enemy3Atk2()
     {
-        int hitChance = 85;
+        int hitChance = 80;
         bool isDead = false;
 
         if (Random.Range(0, 100) <= hitChance)
@@ -436,7 +436,7 @@ public class battleSystem : MonoBehaviour
         Atk1Up = true;
         atk1Min = 5;
         atk1Max = 8;
-        atk1Dmg.text = atk1Min.ToString() + "-" + " 7 dmg";
+        atk1Dmg.text = atk1Min.ToString() + "-" + "7 dmg";
         increaseStats.SetActive(false);
     }
     public void Atk2UpBtn1()
@@ -444,7 +444,7 @@ public class battleSystem : MonoBehaviour
         Atk2Up = true;
         atk2Min = 6;
         atk2Max = 11;
-        atk2Dmg.text = atk2Min.ToString() + " -" + " 10 dmg";
+        atk2Dmg.text = atk2Min.ToString() + "-" + "10 dmg";
         increaseStats.SetActive(false);
     }
     public void HealUpBtn1()
@@ -452,7 +452,7 @@ public class battleSystem : MonoBehaviour
         HealUp = true;
         healMin = 5;
         healMax = 9;
-        healAmtText.text = healMin.ToString() + " -" + " 8 HP";
+        healAmtText.text = healMin.ToString() + "-" + "8 HP";
         increaseStats.SetActive(false);
     }
 
@@ -469,15 +469,15 @@ public class battleSystem : MonoBehaviour
         Atk1Up = true;
         atk1Min = 6;
         atk1Max = 9;
-        atk1Dmg.text = atk1Min.ToString() + " -" + " 8 dmg";
+        atk1Dmg.text = atk1Min.ToString() + "-" + "8 dmg";
         increaseStats.SetActive(false);
     }
     public void Atk2UpBtn2()
     {
         Atk2Up = true;
-        atk2Min = 6;
+        atk2Min = 7;
         atk2Max = 12;
-        atk2Dmg.text = atk2Min.ToString() + " -" + " 11 dmg";
+        atk2Dmg.text = atk2Min.ToString() + "-" + "11 dmg";
         increaseStats.SetActive(false);
     }
     public void HealUpBtn2()
@@ -485,7 +485,7 @@ public class battleSystem : MonoBehaviour
         HealUp = true;
         healMin = 6;
         healMax = 10;
-        healAmtText.text = healMin.ToString() + " -" + " 9 HP";
+        healAmtText.text = healMin.ToString() + "-" + "9 HP";
         increaseStats.SetActive(false);
     }
 }
